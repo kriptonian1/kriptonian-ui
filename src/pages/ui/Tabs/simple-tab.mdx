@@ -1,31 +1,192 @@
+import { Steps } from 'nextra/components'
+import { Tabs, Tab } from 'nextra/components'
+import { FileTree } from 'nextra/components'
+
+import SimpleTabDemo  from '@/components/tabs/simpleTab';
+import ComponentContainer from '@/components/shared/componentContainer';
+
 # Simple Tab
 
----
+Implementing a simple tab component using Next.js and Tailwind CSS.
 
-```tsx copy showLineNumbers
-import React from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
+## Preview
+<ComponentContainer>
+<SimpleTabDemo />
+</ComponentContainer>
 
-export default function SimpleTab() {
-  return (
-	<Tabs>
-	  <TabList>
-		<Tab>Tab 1</Tab>
-		<Tab>Tab 2</Tab>
-		<Tab>Tab 3</Tab>
-	  </TabList>
 
-	  <TabPanel>
-		<h2>Any content 1</h2>
-	  </TabPanel>
-	  <TabPanel>
-		<h2>Any content 2</h2>
-	  </TabPanel>
-	  <TabPanel>
-		<h2>Any content 3</h2>
-	  </TabPanel>
-	</Tabs>
-  );
+## Installation
+
+<Steps>
+### Install dependencies
+ 
+<Tabs items={['pnpm', 'npm']}>
+  <Tab>
+    ```bash copy
+	pnpm add clsx tailwind-merge
+	```
+  </Tab>
+  <Tab>
+	```bash copy
+	npm i clsx tailwind-merge
+	```
+  </Tab>
+</Tabs>
+ 
+### Add util file
+ 
+```tsx filename="utils/cn.ts" showLineNumbers copy
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
 }
 ```
+
+### Copy the source code
+```tsx filename="components/ui/simpleTab.tsx" showLineNumbers copy
+import React, { type Dispatch, type SetStateAction } from "react";
+import { cn } from "@/util/cn";
+
+interface TabProps {
+  key?: string | number;
+  children: string;
+  currentVal: string;
+  setCurrentVal: Dispatch<SetStateAction<string>>;
+}
+
+/**
+ * Renders a tab component.
+ *
+ * @param children - The tab label.
+ * @param currentVal - The current tab value.
+ * @param setCurrentVal - The function to set the current tab value.
+ * @returns  The rendered tab component.
+ */
+export function Tab({
+  key,
+  children,
+  currentVal,
+  setCurrentVal,
+}: TabProps): React.JSX.Element {
+  return (
+    <button
+      key={key}
+      className={cn(currentVal === children ? "border-b border-b-blue-500" : "border-b border-b-transparent", "px-4 py-2")}
+      onClick={() => {
+        setCurrentVal(children);
+      }}
+      type="button"
+    >
+      {children}
+    </button>
+  );
+}
+
+export function TabContainer({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.JSX.Element {
+  return <div className="flex">{children}</div>;
+}
+
+interface ContentProps {
+  currentVal: string;
+  forTab: string;
+  children: React.ReactNode;
+}
+/**
+ * Renders the content for a tab.
+ * @param currentVal - The current tab value.
+ * @param forTab - The tab value for which the content is rendered.
+ * @param children - The content to render.
+ * @returns
+ */
+export function Content({
+  currentVal,
+  forTab,
+  children,
+}: ContentProps): React.JSX.Element {
+  return <>{currentVal === forTab && children}</>;
+}
+
+export function ContentContainer({
+  children,
+}: {
+  children:React.ReactNode;
+}): React.JSX.Element {
+  return <div className="mt-4">{children}</div>;
+}
+```
+
+### Use the component
+```tsx showLineNumbers copy
+"use client";
+
+import React, { useState } from "react";
+import { TabContainer, Tab, Content, ContentContainer } from "@/components/ui/simpleTab";
+
+function SimpleTabDemo(): React.JSX.Element {
+  const tabData: string[] = ["Tab 1", "Tab 2", "Tab 3"];
+
+  const [currentVal, setCurrentVal] = useState<string>(tabData[0]);
+
+  return (
+    <div>
+      <TabContainer>
+        {
+          tabData.map((tab) => {
+            return (
+              <Tab
+                key={tab}
+                currentVal={currentVal}
+                setCurrentVal={setCurrentVal}
+              >
+                {tab}
+              </Tab>
+            );
+          
+          })
+        }
+      </TabContainer>
+      <ContentContainer>
+        <Content currentVal={currentVal} forTab={tabData[0]}>
+          <div>Tab 1 content</div>
+        </Content>
+        <Content currentVal={currentVal} forTab={tabData[1]}>
+          <div>Tab 2 content</div>
+        </Content>
+        <Content currentVal={currentVal} forTab={tabData[2]}>
+          <div>Tab 3 content</div>
+        </Content>
+      </ContentContainer>
+    </div>
+  );
+}
+
+export default SimpleTabDemo;
+```
+</Steps>
+
+## File Structure of the project
+
+<FileTree>
+  <FileTree.Folder name="src" defaultOpen>
+	<FileTree.Folder name="app">
+		<FileTree.File name="favicon.ico" />
+		<FileTree.File name="globals.css" />
+		<FileTree.File name="layout.tsx" />
+		<FileTree.File name="page.tsx" />
+	</FileTree.Folder>
+	<FileTree.Folder name="components" defaultOpen>
+		<FileTree.Folder name="ui" defaultOpen>
+			<FileTree.File name="simpleTab.tsx" />
+		</FileTree.Folder>
+	</FileTree.Folder>
+	<FileTree.Folder name="util" defaultOpen>
+		<FileTree.File name="cn.ts" />
+	</FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>

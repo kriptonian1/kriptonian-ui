@@ -1,0 +1,138 @@
+import { Steps } from 'nextra/components'
+import { Tabs, Tab } from 'nextra/components'
+import { FileTree } from 'nextra/components'
+
+import ComponentContainer from '@/components/shared/componentContainer';
+import {AnimatedTabDemo } from '@/components/tabs/animatedTab';
+
+# Animated Tab
+
+Implement a animated tab component using Next.js, Tailwind CSS, and Framer Motion.
+
+## Preview
+<ComponentContainer>
+<AnimatedTabDemo />
+</ComponentContainer>
+
+## Installation
+
+<Steps>
+### Install dependencies
+ 
+<Tabs items={['pnpm', 'npm']}>
+  <Tab>
+    ```bash copy
+	pnpm add clsx tailwind-merge framer-motion
+	```
+  </Tab>
+  <Tab>
+	```bash copy
+	npm i clsx tailwind-merge framer-motion
+	```
+  </Tab>
+</Tabs>
+ 
+### Add util file
+ 
+```tsx filename="utils/cn.ts" showLineNumbers copy
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
+}
+```
+
+### Copy the source code
+```tsx filename="components/ui/animatedTab.tsx" showLineNumbers copy
+"use client";
+
+import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { cn } from "@/util/cn";
+
+interface AnimatedTabProps {
+  tabs: { id: string; label: string }[];
+}
+
+function AnimatedTab({ tabs }: AnimatedTabProps): React.JSX.Element {
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
+
+  return (
+    <div className="flex space-x-1">
+      {tabs.map((tab) => (
+        <button
+        type="button"
+          key={tab.id}
+          onClick={() => {
+            setActiveTab(tab.id);
+          }}
+          className={cn(
+            activeTab === tab.id ? "" : "hover:text-white/60",
+            "relative rounded-full px-3 py-1.5 text-sm font-medium text-white transition focus-visible:outline-2",
+          )}
+          style={{
+            WebkitTapHighlightColor: "transparent",
+          }}
+        >
+          {activeTab === tab.id && (
+            <motion.span
+              layoutId="bubble"
+              className="absolute inset-0 z-10 bg-white mix-blend-difference"
+              style={{ borderRadius: 9999 }}
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            />
+          )}
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+export default AnimatedTab;
+```
+
+### Use the component
+```tsx showLineNumbers copy
+import { AnimatedTab } from "@/components/ui/animatedTab";
+
+export function AnimatedTabDemo(): React.JSX.Element {
+  const tabsData = [
+    { id: "home", label: "Home" },
+    { id: "about", label: "About" },
+    { id: "blogs", label: "Blogs" },
+    { id: "carrer", label: "Carrer" },
+    { id: "docs", label: "Documentation" },
+  ];
+
+  return (
+    <div>
+      <AnimatedTab tabs={tabsData} />
+    </div>
+  );
+}
+
+```
+</Steps>
+
+## File Structure of the project
+
+<FileTree>
+  <FileTree.Folder name="src" defaultOpen>
+	<FileTree.Folder name="app">
+		<FileTree.File name="favicon.ico" />
+		<FileTree.File name="globals.css" />
+		<FileTree.File name="layout.tsx" />
+		<FileTree.File name="page.tsx" />
+	</FileTree.Folder>
+	<FileTree.Folder name="components" defaultOpen>
+		<FileTree.Folder name="ui" defaultOpen>
+			<FileTree.File name="animatedTab.tsx" />
+		</FileTree.Folder>
+	</FileTree.Folder>
+	<FileTree.Folder name="util" defaultOpen>
+		<FileTree.File name="cn.ts" />
+	</FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
