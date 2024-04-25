@@ -119,7 +119,7 @@ const config: DocsThemeConfig = {
         viewBox="0 0 300 300"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
-        className="h-4 w-4 p-px text-white dark:text-black"
+        className="h-4 w-4 p-px"
       >
         <path
           // stroke="currentColor"
