@@ -1,3 +1,4 @@
+import { StaggerRoll } from "@/components/ui/text/staggerRoll";
 import Link from "next/link";
 
 export default function Home(): JSX.Element {
@@ -11,11 +12,11 @@ export default function Home(): JSX.Element {
           Ship beautiful UIs faster with Kriptonian UI, a collection of free and
           open-source UI components.
         </h2>
-        <Link
-          href="/ui"
-          className="rounded-full border border-blue-500 bg-blue-200/40 px-4 py-2 text-blue-500 shadow-md dark:text-white transition-colors hover:border-white/30 hover:bg-blue-500 hover:text-white hover:shadow-lg dark:border-white/20 dark:bg-white/10 dark:hover:bg-white/80 dark:hover:text-black"
-        >
-          Browse Components
+        <Link href="/ui">
+          <StaggerRoll
+            text="Browse Components"
+            className="rounded-full border border-blue-500 bg-blue-200/40 px-4 py-2 text-blue-500 shadow-md transition-colors hover:border-white/30 hover:bg-blue-500 hover:text-white hover:shadow-lg dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/80 dark:hover:text-black"
+          />
         </Link>
       </div>
     </main>

@@ -1,0 +1,114 @@
+import { Steps } from 'nextra/components'
+import { Tabs, Tab } from 'nextra/components'
+import { FileTree } from 'nextra/components'
+
+import SpeedTextDemo  from '@/components/ui/text/speedText';
+import ComponentContainer from '@/components/shared/componentContainer';
+
+# Speed Text
+
+Implementing a Stagger Roll component using Next.js and Tailwind CSS.
+
+## Preview
+<ComponentContainer>
+<SpeedTextDemo />
+</ComponentContainer>
+
+
+## Installation
+
+<Steps>
+### Install dependencies
+ 
+<Tabs items={['pnpm', 'npm']}>
+  <Tab>
+    ```bash copy
+	pnpm add clsx tailwind-merge
+	```
+  </Tab>
+  <Tab>
+	```bash copy
+	npm i clsx tailwind-merge
+	```
+  </Tab>
+</Tabs>
+ 
+### Add util file
+ 
+```tsx filename="utils/cn.ts" showLineNumbers copy
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
+}
+```
+
+### Copy the source code
+```tsx filename="components/ui/speedText.tsx" showLineNumbers copy
+import React from "react";
+import { cn } from "@/util/cn";
+
+interface SpeedTextProps {
+  text: string;
+  className?: string;
+}
+
+export function SpeedText({
+  text,
+  className,
+}: SpeedTextProps): React.JSX.Element {
+  return (
+    <div
+      className={cn(
+        "group relative inline-flex h-12 items-center justify-center overflow-hidden text-neutral-950 dark:text-white",
+        className,
+      )}
+    >
+      <span className="relative inline-flex overflow-hidden">
+        <div className="absolute origin-bottom transition duration-500 [transform:translateX(-150%)_skewX(33deg)] group-hover:[transform:translateX(0)_skewX(0deg)]">
+          {text}
+        </div>
+        <div className="transition duration-500 [transform:translateX(0%)_skewX(0deg)] group-hover:[transform:translateX(150%)_skewX(33deg)]">
+          {text}
+        </div>
+      </span>
+    </div>
+  );
+}
+```
+
+### Use the component
+```tsx showLineNumbers copy
+function SpeedTextDemo(): React.JSX.Element {
+  return (
+    <div className="flex flex-wrap gap-4">
+      <SpeedText text="Hover me" className="text-2xl" />
+    </div>
+  );
+}
+
+export default SpeedTextDemo;
+```
+</Steps>
+
+## File Structure of the project
+
+<FileTree>
+  <FileTree.Folder name="src" defaultOpen>
+	<FileTree.Folder name="app">
+		<FileTree.File name="favicon.ico" />
+		<FileTree.File name="globals.css" />
+		<FileTree.File name="layout.tsx" />
+		<FileTree.File name="page.tsx" />
+	</FileTree.Folder>
+	<FileTree.Folder name="components" defaultOpen>
+		<FileTree.Folder name="ui" defaultOpen>
+			<FileTree.File name="speedText.tsx" />
+		</FileTree.Folder>
+	</FileTree.Folder>
+	<FileTree.Folder name="util" defaultOpen>
+		<FileTree.File name="cn.ts" />
+	</FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>

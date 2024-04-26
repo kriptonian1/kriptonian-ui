@@ -1,0 +1,106 @@
+import { Steps } from 'nextra/components'
+import { Tabs, Tab } from 'nextra/components'
+import { FileTree } from 'nextra/components'
+
+import StaggerRollDemo  from '@/components/ui/text/staggerRoll';
+import ComponentContainer from '@/components/shared/componentContainer';
+
+# Stagger Roll
+
+Implementing a Stagger Roll component using Next.js and Tailwind CSS.
+
+## Preview
+<ComponentContainer>
+<StaggerRollDemo />
+</ComponentContainer>
+
+
+## Installation
+
+<Steps>
+### Install dependencies
+ 
+<Tabs items={['pnpm', 'npm']}>
+  <Tab>
+    ```bash copy
+	pnpm add clsx tailwind-merge
+	```
+  </Tab>
+  <Tab>
+	```bash copy
+	npm i clsx tailwind-merge
+	```
+  </Tab>
+</Tabs>
+ 
+### Add util file
+ 
+```tsx filename="utils/cn.ts" showLineNumbers copy
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
+}
+```
+
+### Copy the source code
+```tsx filename="components/ui/staggerRoll.tsx" showLineNumbers copy
+import React from "react";
+import { cn } from "@/util/cn";
+
+interface StaggerRollProps {
+  text: string;
+  className?: string;
+}
+
+export function StaggerRoll({ text, className }: StaggerRollProps): React.JSX.Element {
+  return (
+    <div className={cn(className ,"group relative text-neutral-950 dark:text-white")}>
+      <span className="relative inline-flex overflow-hidden">
+        <div className="translate-y-0 skew-y-0 transition duration-500 group-hover:-translate-y-[110%] group-hover:skew-y-12">
+          {text}
+        </div>
+        <div className="absolute translate-y-[110%] skew-y-12 transition duration-500 group-hover:translate-y-0 group-hover:skew-y-0">
+          {text}
+        </div>
+      </span>
+    </div>
+  );
+}
+```
+
+### Use the component
+```tsx showLineNumbers copy
+function StaggerRollDemo(): React.JSX.Element {
+  return (
+    <div className="flex flex-wrap gap-4">
+      <StaggerRoll text="Hover me" className="text-2xl" />
+    </div>
+  );
+}
+
+export default StaggerRollDemo;
+```
+</Steps>
+
+## File Structure of the project
+
+<FileTree>
+  <FileTree.Folder name="src" defaultOpen>
+	<FileTree.Folder name="app">
+		<FileTree.File name="favicon.ico" />
+		<FileTree.File name="globals.css" />
+		<FileTree.File name="layout.tsx" />
+		<FileTree.File name="page.tsx" />
+	</FileTree.Folder>
+	<FileTree.Folder name="components" defaultOpen>
+		<FileTree.Folder name="ui" defaultOpen>
+			<FileTree.File name="staggerRoll.tsx" />
+		</FileTree.Folder>
+	</FileTree.Folder>
+	<FileTree.Folder name="util" defaultOpen>
+		<FileTree.File name="cn.ts" />
+	</FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
