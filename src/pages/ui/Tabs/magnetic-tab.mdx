@@ -1,0 +1,151 @@
+import { Steps } from 'nextra/components'
+import { Tabs, Tab } from 'nextra/components'
+import { FileTree } from 'nextra/components'
+
+import ComponentContainer from '@/components/shared/componentContainer';
+import { MagneticTabDemo }  from '@/components/tabs/magneticTab';
+
+# Magnetic Tab
+
+Implement a Magnetic tab component using Next.js, Tailwind CSS, and Framer Motion.
+
+## Preview
+<ComponentContainer>
+<MagneticTabDemo />
+</ComponentContainer>
+
+## Installation
+
+<Steps>
+### Install dependencies
+ 
+<Tabs items={['pnpm', 'npm']}>
+  <Tab>
+    ```bash copy
+	pnpm add clsx tailwind-merge framer-motion
+	```
+  </Tab>
+  <Tab>
+	```bash copy
+	npm i clsx tailwind-merge framer-motion
+	```
+  </Tab>
+</Tabs>
+ 
+### Add util file
+ 
+```tsx filename="utils/cn.ts" showLineNumbers copy
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
+}
+```
+
+### Copy the source code
+```tsx filename="components/ui/magneticTab.tsx" showLineNumbers copy
+"use client";
+
+import React, { useRef, useState } from "react";
+
+interface MagneticTabProps {
+  item: { id: number; text: string };
+}
+
+interface HoverPosition {
+  x: number;
+  y: number;
+  opacity: number;
+}
+
+function MagneticTab({ item }: MagneticTabProps): React.JSX.Element {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const [hoverPosition, setHoverPosition] = useState<HoverPosition>({
+    x: 0,
+    y: 0,
+    opacity: 0,
+  });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    const { clientX, clientY, currentTarget } = e;
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    const x = (clientX - left - width / 2) * 0.15;
+    const y = (clientY - top - height / 2) * 0.15;
+
+    setHoverPosition({ x, y, opacity: 1 });
+  };
+
+  const onMouseOut = (): void => {
+    setHoverPosition({ x: 0, y: 0, opacity: 0 });
+  };
+
+  return (
+    <button
+      type="button"
+      ref={buttonRef}
+      className="relative h-9"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={onMouseOut}
+    >
+      <span className="relative z-10 px-4 py-2 text-sm text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">
+        {item.text}
+      </span>{" "}
+      <div
+        className="absolute bottom-0 left-0 h-full w-full rounded-[4px] bg-blue-300 transition-opacity dark:bg-blue-700/20"
+        aria-hidden="true"
+        style={{
+          transform: `translate(${hoverPosition.x as unknown as string}px, ${hoverPosition.y as unknown as string}px)`,
+          opacity: hoverPosition.opacity,
+        }}
+      />
+    </button>
+  );
+}
+
+export default MagneticTab;
+```
+
+### Use the component
+```tsx showLineNumbers copy
+import MagneticTab from "@/components/ui/magneticTab";
+
+const tabs = [
+  { id: 1, text: "Home" },
+  { id: 2, text: "Blog" },
+  { id: 3, text: "Projects" },
+];
+
+export function MagneticTabDemo(): React.JSX.Element {
+  return (
+    <div className="flex flex-row ">
+      {tabs.map((item) => (
+        <MagneticTab key={item.id} item={item} />
+      ))}
+    </div>
+  );
+}
+```
+</Steps>
+
+## File Structure of the project
+
+<FileTree>
+  <FileTree.Folder name="src" defaultOpen>
+	<FileTree.Folder name="app">
+		<FileTree.File name="favicon.ico" />
+		<FileTree.File name="globals.css" />
+		<FileTree.File name="layout.tsx" />
+		<FileTree.File name="page.tsx" />
+	</FileTree.Folder>
+	<FileTree.Folder name="components" defaultOpen>
+		<FileTree.Folder name="ui" defaultOpen>
+			<FileTree.File name="magneticTab.tsx" />
+		</FileTree.Folder>
+	</FileTree.Folder>
+	<FileTree.Folder name="util" defaultOpen>
+		<FileTree.File name="cn.ts" />
+	</FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>

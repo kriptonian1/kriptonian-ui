@@ -55,12 +55,8 @@ const config: DocsThemeConfig = {
   logo,
   head: function useHead() {
     const { title } = useConfig();
-    const { route } = useRouter();
 
-    const socialCard =
-      route === "/" || !title
-        ? "https://nextra.site/og.jpeg"
-        : `https://nextra.site/api/og?title=${title}`;
+    const socialCard = "https://ui.kriptonian.xyz/og.jpeg"
 
     return (
       <>
@@ -78,17 +74,17 @@ const config: DocsThemeConfig = {
         />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={socialCard} />
-        <meta name="twitter:site:domain" content="nextra.site" />
-        <meta name="twitter:url" content="https://nextra.site" />
+        <meta name="twitter:site:domain" content="ui.kriptonian.xyz" />
+        <meta name="twitter:url" content="https://ui.kriptonian.xyz/" />
         <meta
           name="og:title"
-          content={title ? `${title} – Nextra` : "Nextra"}
+          content={title ? `${title} – Kriptonian UI` : "Kriptonian UI"}
         />
         <meta name="og:image" content={socialCard} />
-        <meta name="apple-mobile-web-app-title" content="Nextra" />
+        <meta name="apple-mobile-web-app-title" content="Kriptonian UI" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon.png" type="image/png" />
-        <link
+        {/* <link
           rel="icon"
           href="/favicon-dark.svg"
           type="image/svg+xml"
@@ -99,7 +95,7 @@ const config: DocsThemeConfig = {
           href="/favicon-dark.png"
           type="image/png"
           media="(prefers-color-scheme: dark)"
-        />
+        /> */}
       </>
     );
   },
