@@ -23,8 +23,6 @@ function ComponentContainer({
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
-
-  console.log(theme);
   
 
   return (
