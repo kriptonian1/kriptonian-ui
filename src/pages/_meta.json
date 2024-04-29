@@ -1,4 +1,12 @@
 {
+	"index": {
+		"type": "page",
+		"title": "Kriptonian UI",
+		"display": "hidden",
+		"theme": {
+		  "layout": "raw"
+		}	
+	},
     "ui": {
 		"title": "Design",
 		"display": "children"

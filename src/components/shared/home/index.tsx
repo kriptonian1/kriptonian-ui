@@ -1,9 +1,9 @@
-import { StaggerRoll } from "@/components/ui/text/staggerRoll";
 import Link from "next/link";
+import { StaggerRoll } from "@/components/ui/text/staggerRoll";
 
 export default function Home(): JSX.Element {
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
+    <main className="flex h-[93vh] flex-col items-center bg-white bg-gradient-to-br from-transparent via-white to-blue-200 p-24 dark:bg-black dark:via-black dark:to-blue-600/20">
       <div className="flex flex-col items-center gap-y-8">
         <h1 className="w-[40rem] bg-gradient-to-br from-black to-black/50 bg-clip-text text-center text-6xl font-semibold text-transparent drop-shadow-xl dark:from-slate-200 dark:to-slate-200/50">
           Launch Great UI Fast with Kriptonian UI

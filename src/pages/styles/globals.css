@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+/* 
+body {
+  @apply bg-white bg-gradient-to-br from-transparent via-white to-blue-200 dark:bg-black dark:via-black dark:to-blue-600/20;
+} */
