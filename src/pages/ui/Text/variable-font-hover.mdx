@@ -1,0 +1,148 @@
+import { Steps } from 'nextra/components'
+import { Tabs, Tab } from 'nextra/components'
+import { FileTree } from 'nextra/components'
+
+import VariableFontHover  from '@/components/ui/text/variableFontHover';
+import ComponentContainer from '@/components/shared/componentContainer';
+
+# Blur Password Hide
+
+Implementing a Blur Password Hide component using Next.js and Tailwind CSS. Took the inspiration from [@jh3yy](https://twitter.com/jh3yy/status/1781069350071328857).
+
+## Preview
+<ComponentContainer>
+<VariableFontHover />
+</ComponentContainer>
+
+
+## Installation
+
+<Steps>
+### Install dependencies
+ 
+<Tabs items={['pnpm', 'npm']}>
+  <Tab>
+    ```bash copy
+	pnpm add clsx tailwind-merge
+	```
+  </Tab>
+  <Tab>
+	```bash copy
+	npm i clsx tailwind-merge
+	```
+  </Tab>
+</Tabs>
+ 
+### Add util file
+ 
+```tsx filename="utils/cn.ts" showLineNumbers copy
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
+}
+```
+
+### Copy the source code
+```tsx filename="components/ui/blurPasswordHide.tsx" showLineNumbers copy
+"use client";
+import React, { useState } from "react";
+import { cn } from "@/util/cn";
+
+export function BlurPassowrdHide({
+  text,
+}: {
+  text: string;
+}): React.JSX.Element {
+  const [currentIndex, setCurrentIndex] = useState<number>(-1);
+
+  const gradularBlur = (currentIndexTrack: number, index: number): string => {
+    if (currentIndexTrack === -1) {
+      return "blur";
+    } else if (index === currentIndexTrack) {
+      return "blur-0";
+    } else if (
+      index === currentIndexTrack + 1 ||
+      index === currentIndexTrack - 1
+    ) {
+      return "blur-[1px]";
+    } else if (
+      index === currentIndexTrack + 2 ||
+      index === currentIndexTrack - 2
+    ) {
+      return "blur-[2px]";
+    } else if (
+      index === currentIndexTrack + 3 ||
+      index === currentIndexTrack - 3
+    ) {
+      return "blur-[4px]";
+    }
+    return "blur";
+  };
+
+  const characters = text.split("");
+
+  return (
+    <div className="text-4xl">
+      {characters.map((char, index) => (
+        <span
+          onMouseEnter={() => {
+            setCurrentIndex(index);
+          }}
+          onMouseLeave={() => {
+            setCurrentIndex(-1);
+          }}
+          className={cn(gradularBlur(currentIndex, index), "transition-all duration-[1000ms] ease-out")}
+          // eslint-disable-next-line react/no-array-index-key -- Index is used as key here
+          key={index}
+        >
+          {char}
+        </span>
+      ))}
+    </div>
+  );
+}
+```
+
+### Use the component
+```tsx showLineNumbers copy
+import { BlurPassowrdHide }  from '@/components/ui/blurPasswordHide';
+function BlurPassowrdHideDemo(): React.JSX.Element {
+  return (
+    <div className="flex h-[50vh] w-full flex-col items-center justify-center gap-4">
+      <div className="my-2 flex">
+        <div className="w-[35vw]">
+          <h1 className="text-2xl">Password</h1>
+          <p className=" text-sm">Hover over the password to reveal it.</p>
+        </div>
+      </div>
+      <BlurPassowrdHide text="This_is_a_very_secret_password" />
+    </div>
+  );
+}
+
+export default BlurPassowrdHideDemo;
+```
+</Steps>
+
+## File Structure of the project
+
+<FileTree>
+  <FileTree.Folder name="src" defaultOpen>
+	<FileTree.Folder name="app">
+		<FileTree.File name="favicon.ico" />
+		<FileTree.File name="globals.css" />
+		<FileTree.File name="layout.tsx" />
+		<FileTree.File name="page.tsx" />
+	</FileTree.Folder>
+	<FileTree.Folder name="components" defaultOpen>
+		<FileTree.Folder name="ui" defaultOpen>
+			<FileTree.File name="blurPasswordHide.tsx" />
+		</FileTree.Folder>
+	</FileTree.Folder>
+	<FileTree.Folder name="util" defaultOpen>
+		<FileTree.File name="cn.ts" />
+	</FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
