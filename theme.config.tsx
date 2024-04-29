@@ -56,7 +56,7 @@ const config: DocsThemeConfig = {
   head: function useHead() {
     const { title } = useConfig();
 
-    const socialCard = "https://ui.kriptonian.xyz/og.jpeg"
+    const socialCard = "https://ui.kriptonian.xyz/og.jpg"
 
     return (
       <>
