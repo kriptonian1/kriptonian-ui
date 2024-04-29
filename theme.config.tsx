@@ -6,7 +6,12 @@ import type { DocsThemeConfig } from "nextra-theme-docs";
 import { useConfig } from "nextra-theme-docs";
 
 const logo = (
-  <svg width="150" viewBox="0 0 1994 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    width="150"
+    viewBox="0 0 1994 400"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       d="m188.64 399.713-48.435-27.082.021-.035 84.551-137.395 39.329 22.024-75.466 142.488ZM80.18 62.195l77.048 141.96-38.276 22.546L32.403 90.546l47.776-28.35Zm55.913 80.583L211.031.29l47.912 27.601-.026.042-84.548 137.391-38.276-22.546Zm231.703 165.618-48.44 28.432h-.349l-77.62-140.984 38.806-23.074 87.603 135.626ZM21.209 234.607l160.962 4.75 1.049 44.57-162.01 6.86v-56.18Zm195.767-118.534 162.018-6.86.525 55.657h-.318l-162.225-3.699v-45.098Z"
       fill="currentColor"
@@ -56,7 +61,7 @@ const config: DocsThemeConfig = {
   head: function useHead() {
     const { title } = useConfig();
 
-    const socialCard = "https://ui.kriptonian.xyz/og.jpg"
+    const socialCard = "https://ui.kriptonian.xyz/og.jpg";
 
     return (
       <>
@@ -65,22 +70,22 @@ const config: DocsThemeConfig = {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta httpEquiv="Content-Language" content="en" />
         <meta
-          name="description"
-          content="Make beautiful websites with Next.js & MDX."
+          property="description"
+          content="Launch Great UI Fast with Kriptonian UI. Kriptonian UI is a collection of React components that helps you build great UI fast by simply copying and pasting the components."
         />
         <meta
-          name="og:description"
-          content="Make beautiful websites with Next.js & MDX."
+          property="og:description"
+          content="Launch Great UI Fast with Kriptonian UI. Kriptonian UI is a collection of React components that helps you build great UI fast by simply copying and pasting the components."
         />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content={socialCard} />
-        <meta name="twitter:site:domain" content="ui.kriptonian.xyz" />
-        <meta name="twitter:url" content="https://ui.kriptonian.xyz/" />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:image" content={socialCard} />
+        <meta property="twitter:site:domain" content="ui.kriptonian.xyz" />
+        <meta property="twitter:url" content="https://ui.kriptonian.xyz/" />
         <meta
-          name="og:title"
+          property="og:title"
           content={title ? `${title} – Kriptonian UI` : "Kriptonian UI"}
         />
-        <meta name="og:image" content={socialCard} />
+        <meta property="og:image" content={socialCard} />
         <meta name="apple-mobile-web-app-title" content="Kriptonian UI" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon.png" type="image/png" />
