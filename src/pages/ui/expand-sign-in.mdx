@@ -1,0 +1,252 @@
+import { Steps } from 'nextra/components'
+import { Tabs, Tab } from 'nextra/components'
+import { FileTree } from 'nextra/components'
+
+import ExpandSignInDemo  from '@/components/ui/expandSignIn';
+import ComponentContainer from '@/components/shared/componentContainer';
+
+# Expand Sign In
+
+Implementing a Expand Sign In componenet using Next.js, Tailwind CSS and Framer Motion. This is inspired from the [design](https://twitter.com/nitishkmrk/status/1780849995635474492) of [@nitishkmrk](https://twitter.com/nitishkmrk).
+
+## Preview
+<ComponentContainer>
+<ExpandSignInDemo />
+</ComponentContainer>
+
+
+## Installation
+
+<Steps>
+### Install dependencies
+ 
+<Tabs items={['pnpm', 'npm']}>
+  <Tab>
+    ```bash copy
+	pnpm add clsx tailwind-merge
+	```
+  </Tab>
+  <Tab>
+	```bash copy
+	npm i clsx tailwind-merge
+	```
+  </Tab>
+</Tabs>
+ 
+### Add util file
+ 
+```tsx filename="utils/cn.ts" showLineNumbers copy
+"use client";
+import React, { type HTMLAttributes, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { cn } from "@/util/cn";
+
+interface OauthBtnProps extends HTMLAttributes<HTMLButtonElement> {
+  type: "Google" | "Apple";
+}
+
+function OauthBtn({ type, ...props }: OauthBtnProps): React.JSX.Element {
+  return (
+    <button
+      type="button"
+      {...props}
+      className="flex w-full items-center justify-center gap-2 rounded border border-black/10 bg-gray-400/15 px-4 py-2 text-lg font-medium text-black transition-shadow duration-500 ease-in-out hover:shadow dark:text-white"
+    >
+      {type === "Google" ? (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-6"
+          viewBox="0 0 48 48"
+        >
+          <path
+            fill="#FFC107"
+            d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"
+          />
+          <path
+            fill="#FF3D00"
+            d="m6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"
+          />
+          <path
+            fill="#4CAF50"
+            d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"
+          />
+          <path
+            fill="#1976D2"
+            d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"
+          />
+        </svg>
+      ) : (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-6"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M15.718 5.492c-.575 0-1.109.088-1.603.264c-.494.176-.944.35-1.35.523c-.406.172-.758.258-1.057.258c-.314 0-.662-.082-1.045-.247a23.818 23.818 0 0 0-1.235-.488A4.07 4.07 0 0 0 8.02 5.56c-.942 0-1.85.256-2.722.77c-.874.512-1.59 1.27-2.149 2.274c-.559 1.003-.838 2.24-.838 3.711c0 .919.107 1.838.321 2.757c.215.92.502 1.789.862 2.608c.36.82.758 1.543 1.195 2.172a19.16 19.16 0 0 0 1.66 2.033c.54.567 1.166.85 1.878.85c.467 0 .873-.076 1.218-.23c.345-.153.71-.308 1.097-.465c.387-.157.872-.235 1.454-.235c.444 0 .815.046 1.114.137c.299.092.572.198.821.316c.25.12.512.224.787.316c.276.092.61.138 1 .138c.513 0 .974-.136 1.384-.408c.41-.271.79-.622 1.138-1.05c.348-.43.687-.878 1.017-1.345c.36-.529.652-1.036.878-1.522a13.289 13.289 0 0 0 .672-1.706c-.022-.008-.19-.094-.5-.259c-.31-.164-.662-.427-1.056-.787c-.395-.36-.74-.83-1.034-1.413c-.295-.582-.443-1.294-.443-2.137c0-.735.117-1.369.35-1.901c.234-.533.508-.973.822-1.321c.314-.349.596-.615.845-.799c.249-.184.392-.287.43-.31c-.383-.552-.8-.98-1.252-1.287a5.16 5.16 0 0 0-1.332-.666a5.912 5.912 0 0 0-1.167-.259a8.324 8.324 0 0 0-.752-.051Zm-.804-1.862c.352-.42.64-.91.861-1.464a4.583 4.583 0 0 0 .333-1.718c0-.168-.011-.318-.034-.448c-.574.023-1.174.195-1.798.517a4.952 4.952 0 0 0-1.545 1.206a5.46 5.46 0 0 0-.873 1.379a4.04 4.04 0 0 0-.38 1.7a1.709 1.709 0 0 0 .046.414c.1.023.204.034.31.034c.514 0 1.06-.153 1.638-.46a4.654 4.654 0 0 0 1.442-1.16Z"
+          />
+        </svg>
+      )}
+      Continue with {type}
+    </button>
+  );
+}
+
+export function ExpandSignIn(): React.JSX.Element {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  return (
+    <AnimatePresence>
+      <motion.div
+        layout
+        transition={{ layout: { type: "spring", bounce: 0.3, mass: 0.4 } }}
+        initial={{ borderRadius: 100 }}
+        animate={{ borderRadius: isOpen ? 10 : 100 }}
+        className={cn(
+          isOpen
+            ? " p-4 shadow-lg md:w-[30vw]"
+            : "shadow-md transition-shadow duration-500 hover:shadow-lg",
+          " border border-black/10 bg-gray-400/15  text-lg font-medium text-black dark:text-white",
+        )}
+      >
+        <motion.button
+          {...(isOpen
+            ? {}
+            : {
+                onClick: () => {
+                  setIsOpen(!isOpen);
+                },
+              })}
+          layout="position"
+        >
+          <div
+            className={cn(
+              isOpen
+                ? "flex w-full cursor-default justify-between pb-2 "
+                : "gap-2 px-4 py-2 duration-500 ease-in-out hover:gap-4",
+              "flex items-center",
+            )}
+          >
+            Sign In{" "}
+            {!isOpen ? (
+              <svg
+                className="w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  d="M2 10a.75.75 0 0 1 .75-.75h12.59l-2.1-1.95a.75.75 0 1 1 1.02-1.1l3.5 3.25a.75.75 0 0 1 0 1.1l-3.5 3.25a.75.75 0 1 1-1.02-1.1l2.1-1.95H2.75A.75.75 0 0 1 2 10Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : null}
+          </div>
+        </motion.button>
+
+        {isOpen ? (
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            transition={{
+              duration: 0.5,
+            }}
+          >
+            <div className="flex flex-col gap-2 border-t border-black/10 pt-2 dark:border-white/10">
+              <OauthBtn
+                onClick={() => {
+                  setIsOpen(!isOpen);
+                }}
+                type="Google"
+              />
+              <OauthBtn
+                onClick={() => {
+                  setIsOpen(!isOpen);
+                }}
+                type="Apple"
+              />
+              <div className="flex w-full items-center gap-2 text-black/50 dark:text-white/50">
+                <div className="h-[1px] w-full bg-black/10 dark:bg-white/10" />
+                Or
+                <div className="h-[1px] w-full bg-black/10 dark:bg-white/10" />
+              </div>
+              <div className="flex flex-col gap-2">
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="Email"
+                  className="w-full rounded border border-black/10 bg-transparent p-2 transition-shadow duration-500 ease-in-out hover:shadow dark:border-white/10"
+                />
+                <button
+                  onClick={() => {
+                    setIsOpen(!isOpen);
+                  }}
+                  className="flex w-full items-center justify-center gap-2 rounded bg-black px-4 py-2 text-white duration-500 ease-in-out hover:gap-4 hover:shadow-md dark:bg-white dark:text-black"
+                  type="button"
+                >
+                  Continue{" "}
+                  <svg
+                    className="w-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill="currentColor"
+                      fillRule="evenodd"
+                      d="M2 10a.75.75 0 0 1 .75-.75h12.59l-2.1-1.95a.75.75 0 1 1 1.02-1.1l3.5 3.25a.75.75 0 0 1 0 1.1l-3.5 3.25a.75.75 0 1 1-1.02-1.1l2.1-1.95H2.75A.75.75 0 0 1 2 10Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        ) : null}
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+```
+
+### Use the component
+```tsx showLineNumbers copy
+function ExpandSignInDemo(): React.JSX.Element {
+  return (
+    <div className="flex h-[50vh] items-center">
+      <ExpandSignIn />
+    </div>
+  );
+}
+
+export default ExpandSignInDemo;
+```
+</Steps>
+
+## File Structure of the project
+
+<FileTree>
+  <FileTree.Folder name="src" defaultOpen>
+	<FileTree.Folder name="app">
+		<FileTree.File name="favicon.ico" />
+		<FileTree.File name="globals.css" />
+		<FileTree.File name="layout.tsx" />
+		<FileTree.File name="page.tsx" />
+	</FileTree.Folder>
+	<FileTree.Folder name="components" defaultOpen>
+		<FileTree.Folder name="ui" defaultOpen>
+			<FileTree.File name="expandSignIn.tsx" />
+		</FileTree.Folder>
+	</FileTree.Folder>
+	<FileTree.Folder name="util" defaultOpen>
+		<FileTree.File name="cn.ts" />
+	</FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
