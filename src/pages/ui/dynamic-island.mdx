@@ -1,0 +1,128 @@
+import { Steps } from 'nextra/components'
+import { Tabs, Tab } from 'nextra/components'
+import { FileTree } from 'nextra/components'
+
+import DynamicIslandDemo  from '@/components/ui/dynamicIsland';
+import ComponentContainer from '@/components/shared/componentContainer';
+
+# Dynamic Island
+
+Implementing a Counter component using Next.js and Tailwind CSS.
+
+## Preview
+<ComponentContainer>
+<DynamicIslandDemo />
+</ComponentContainer>
+
+
+## Installation
+
+<Steps>
+### Install dependencies
+ 
+<Tabs items={['pnpm', 'npm']}>
+  <Tab>
+    ```bash copy
+	pnpm add clsx tailwind-merge @uidotdev/usehooks
+	```
+  </Tab>
+  <Tab>
+	```bash copy
+	npm i clsx tailwind-merge @uidotdev/usehooks
+	```
+  </Tab>
+</Tabs>
+ 
+### Add util file
+ 
+```tsx filename="utils/cn.ts" showLineNumbers copy
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
+}
+```
+
+### Copy the source code
+```tsx filename="components/ui/counter.tsx" showLineNumbers copy
+"use client";
+
+import { motion, useSpring, useTransform } from "framer-motion";
+import React, { useEffect, useState } from "react";
+
+interface CounterProps {
+  value: number;
+  className?: string;
+}
+
+export function Counter({ value, className }: CounterProps): React.JSX.Element {
+  const spring = useSpring(value, { mass: 0.8, stiffness: 75, damping: 15 });
+  const display = useTransform(spring, (current) =>
+    Math.round(current as number).toLocaleString(),
+  );
+
+  useEffect(() => {
+    spring.set(value);
+  }, [spring, value]);
+
+  return <motion.span className={className}>{display}</motion.span>;
+}
+```
+
+### Use the component
+```tsx showLineNumbers copy
+function CounterDemo(): React.JSX.Element {
+  const [value, setValue] = useState<number>(1000);
+  return (
+    <div className="flex shadow-xl items-center gap-4 rounded-lg border-[4px] border-b-white/80 border-l-white/70 border-r-white/70 border-t-white/50 bg-blue-400 p-4 dark:shadow-inner ">
+      <button
+        type="button"
+        className="rounded p-2 transition-colors hover:bg-blue-500/50 hover:shadow"
+        onClick={() => {
+          setValue(value - 100);
+        }}
+      >
+        -100
+      </button>
+      <Counter
+        value={value}
+        className="flex w-[5vw] justify-center text-2xl font-medium drop-shadow"
+      />
+      <button
+        type="button"
+        className="rounded p-2 transition-colors hover:bg-blue-500/50 hover:shadow"
+        onClick={() => {
+          setValue(value + 100);
+        }}
+      >
+        +100
+      </button>
+    </div>
+  );
+}
+
+export default CounterDemo;
+```
+</Steps>
+
+## File Structure of the project
+
+<FileTree>
+  <FileTree.Folder name="src" defaultOpen>
+	<FileTree.Folder name="app">
+		<FileTree.File name="favicon.ico" />
+		<FileTree.File name="globals.css" />
+		<FileTree.File name="layout.tsx" />
+		<FileTree.File name="page.tsx" />
+	</FileTree.Folder>
+	<FileTree.Folder name="components" defaultOpen>
+		<FileTree.Folder name="ui" defaultOpen>
+			<FileTree.File name="counter.tsx" />
+		</FileTree.Folder>
+	</FileTree.Folder>
+	<FileTree.Folder name="util" defaultOpen>
+		<FileTree.File name="cn.ts" />
+	</FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
