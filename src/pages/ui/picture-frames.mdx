@@ -1,0 +1,132 @@
+import { Steps } from 'nextra/components'
+import { Tabs, Tab } from 'nextra/components'
+import { FileTree } from 'nextra/components'
+
+import PictureFrameDemo  from '@/components/ui/pictureFrames';
+import ComponentContainer from '@/components/shared/componentContainer';
+
+# Picture Frames
+
+Implementing a Picture frame component using Next.js and Tailwind CSS. This component is inspired from [Nedim Arabacı](https://twitter.com/needim)'s portfolio [website](https://ned.im/changelog).
+
+## Preview
+<ComponentContainer>
+<PictureFrameDemo />
+</ComponentContainer>
+
+
+## Installation
+
+<Steps>
+### Install dependencies
+ 
+<Tabs items={['pnpm', 'npm']}>
+  <Tab>
+    ```bash copy
+	pnpm add clsx tailwind-merge
+	```
+  </Tab>
+  <Tab>
+	```bash copy
+	npm i clsx tailwind-merge
+	```
+  </Tab>
+</Tabs>
+ 
+### Add util file
+ 
+```tsx filename="utils/cn.ts" showLineNumbers copy
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
+}
+```
+
+### Copy the source code
+```tsx filename="components/ui/pictureFrames.tsx" showLineNumbers copy
+"use client";
+import Image from "next/image";
+import React, { useState } from "react";
+import { cn } from "@/util/cn";
+
+interface FrameProps {
+  src: string;
+  alt: string;
+  rot?: number;
+}
+
+export function Frame({ src, alt, rot = 12 }: FrameProps): React.JSX.Element {
+	const [isPressed, setIsPressed] = useState(false);
+  return (
+    <Image
+      onMouseDown={() => {
+        setIsPressed(true);
+      }}
+      onMouseUp={() => {
+        setIsPressed(false);
+      }}
+      alt={alt}
+      width={1920}
+      height={1080}
+      style={{ "--rotate": `${rot.toString()}deg` } as React.CSSProperties}
+      className={cn(isPressed ? "scale-[5]" : "hover:scale-[1.5]" ,"relative w-[5rem] rotate-[--rotate] border bg-white p-2 drop-shadow-md transition-transform duration-300 ease-in-out hover:z-20 hover:rotate-0 ")}
+      src={src}
+    />
+  );
+}
+```
+
+### Use the component
+```tsx showLineNumbers copy
+function PictureFrameDemo(): React.JSX.Element {
+  return (
+    <div className="grid h-[20rem] grid-cols-5 items-center -space-x-5 p-5">
+      <Frame
+        src="https://images.unsplash.com/photo-1715645942867-4c8649966352"
+        alt="frame 1"
+      />
+      <Frame
+        src="https://images.unsplash.com/photo-1557381733-949765af91b9"
+        alt="frame 2"
+        rot={40}
+      />
+      <Frame
+        src="https://images.unsplash.com/photo-1711656166230-8e8ecfab7732"
+        alt="frame 3"
+        rot={-10}
+      />
+      <Frame
+        src="https://images.unsplash.com/photo-1704923510885-5ff4f047ce28"
+        alt="frame 4"
+        rot={10}
+      />
+    </div>
+  );
+}
+
+export default PictureFrameDemo;
+```
+</Steps>
+
+## File Structure of the project
+
+<FileTree>
+  <FileTree.Folder name="src" defaultOpen>
+	<FileTree.Folder name="app">
+		<FileTree.File name="favicon.ico" />
+		<FileTree.File name="globals.css" />
+		<FileTree.File name="layout.tsx" />
+		<FileTree.File name="page.tsx" />
+	</FileTree.Folder>
+	<FileTree.Folder name="components" defaultOpen>
+		<FileTree.Folder name="ui" defaultOpen>
+			<FileTree.File name="pictureFrames.tsx" />
+		</FileTree.Folder>
+	</FileTree.Folder>
+	<FileTree.Folder name="util" defaultOpen>
+		<FileTree.File name="cn.ts" />
+	</FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
