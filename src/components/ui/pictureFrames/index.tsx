@@ -23,7 +23,7 @@ export function Frame({ src, alt, rot = 12 }: FrameProps): React.JSX.Element {
       width={1920}
       height={1080}
       style={{ "--rotate": `${rot.toString()}deg` } as React.CSSProperties}
-      className={cn(isPressed ? "scale-[5]" : "hover:scale-[1.5]" ,"relative w-[5rem] rotate-[--rotate] border bg-white p-2 drop-shadow-md transition-transform duration-300 ease-in-out hover:z-20 hover:rotate-0 ")}
+      className={cn(isPressed ? "scale-[5] cursor-zoom-out" : "hover:scale-[1.5] cursor-zoom-in" ,"relative w-[5rem] rotate-[--rotate] border bg-white p-2 drop-shadow-md transition-transform duration-300 ease-in-out hover:z-20 hover:rotate-0 ")}
       src={src}
     />
   );
